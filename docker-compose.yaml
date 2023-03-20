@@ -1,0 +1,52 @@
+version: "3.8"
+services:
+    rabbitmq:
+      container_name: "rabbitmq"
+      image: rabbitmq:3.10.7-management
+      ports:
+        - '5672:5672'
+        - '15672:15672'
+      networks:
+        - mobility_house
+      healthcheck:
+        test: rabbitmq-diagnostics check_port_connectivity
+        interval: 1s
+        timeout: 3s
+        retries: 30
+    meter:
+      container_name: "meter"
+      image: mh_app/meter
+      environment:
+        RABBITMQ_HOST: rabbitmq
+      networks:
+        - mobility_house
+      build:
+          context: .
+          dockerfile: app/meter/Dockerfile
+      restart: on-failure
+      depends_on:
+        rabbitmq:
+          condition: service_healthy
+        pv:
+          condition: service_started
+      command: ["python", "app/meter/main.py"]
+    pv:
+      container_name: "pv"
+      image: mh_app/pv
+      environment:
+        RABBITMQ_HOST: rabbitmq
+      networks:
+        - mobility_house
+      build:
+          context: .
+          dockerfile: app/pv/Dockerfile
+      restart: on-failure
+      depends_on:
+        rabbitmq:
+          condition: service_healthy
+      command: ["python", "app/pv/main.py"]
+      volumes:
+        - ./app/files:/tmp/mobility_house/app/files
+networks:
+  mobility_house:
+    driver: bridge
