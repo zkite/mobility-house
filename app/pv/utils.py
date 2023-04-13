@@ -18,5 +18,5 @@ def to_seconds(dt: str) -> int:
     return time.hour * 3600 + time.minute * 60 + time.second
 
 def to_kw(value: float):
-    """Convert Watts Into Kilowatt-Hours"""
+    """Convert Watts Into Kilowatt"""
     return round(value/1000, 3)
