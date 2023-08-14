@@ -1,4 +1,4 @@
-black==22.10.0
+black==23.7.0
 isort==5.10.1
 loguru==0.6.0
 arrow==1.2.3

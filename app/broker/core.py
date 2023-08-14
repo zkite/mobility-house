@@ -7,14 +7,17 @@ import aio_pika
 from aiormq.exceptions import AMQPConnectionError, ConnectionChannelError
 from loguru import logger
 
-from app.broker.exceptions import (BrokerConnectionError, ChannelBrokerError,
-                                   QueueBrokerError, RoutingKeyBrokerError,
-                                   UrlBrokerError)
+from app.broker.exceptions import (
+    BrokerConnectionError,
+    ChannelBrokerError,
+    QueueBrokerError,
+    RoutingKeyBrokerError,
+    UrlBrokerError,
+)
 
 
 class Broker:
     def __init__(self, url: str, routing_key: str) -> None:
-
         self._url = url
         self._routing_key = routing_key
         self._connection = None
@@ -54,7 +57,8 @@ class Broker:
         """Publish message to a queue"""
         logger.info(f"publish message: {message}")
         await self.channel.default_exchange.publish(
-            aio_pika.Message(body=message.encode()), routing_key=self.routing_key
+            aio_pika.Message(body=message.encode()),
+            routing_key=self.routing_key,
         )
 
     async def consume(self, process_message: Callable) -> None:
@@ -77,7 +81,9 @@ class Broker:
             self._channel = await self._connection.channel()
         except ConnectionChannelError:
             raise ChannelBrokerError("Can't connect to the channel")
-        self._queue = await self.channel.declare_queue(self.routing_key, auto_delete=True)
+        self._queue = await self.channel.declare_queue(
+            self.routing_key, auto_delete=True
+        )
         return self
 
     async def __aexit__(self, exc_type, exc_val, exc_tb) -> None:

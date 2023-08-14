@@ -46,6 +46,6 @@ class Pv:
                 "datetime": meter["timestamp"],
                 "meter": to_kw(meter["value"]),
                 "pv": to_kw(value),
-                "total": to_kw(meter["value"] + value)
-            }
+                "total": to_kw(meter["value"] + value),
+            },
         )

@@ -9,7 +9,9 @@ from app.constants import DATETIME_FORMAT
 
 
 class Meter:
-    def __init__(self, min_pwr: float, max_pwr: float, delay: int, broker: Broker) -> None:
+    def __init__(
+        self, min_pwr: float, max_pwr: float, delay: int, broker: Broker
+    ) -> None:
         self.min_pwr = min_pwr
         self.max_pwr = max_pwr
         self.delay = delay
